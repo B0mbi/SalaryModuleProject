@@ -10,7 +10,7 @@ namespace SalaryModuleProject.Controllers
 {
     public class TransactionController : Controller
     {
-        private List<TransactionModel> defaultList = new List<TransactionModel>()
+        public List<TransactionModel> defaultList = new List<TransactionModel>()
         {
             new TransactionModel() { TransactionId = 1, TransactionName = "Zakupy", TransactionType = eTransactionType.Withdraw, Amount = 150 },
             new TransactionModel() { TransactionId = 2, TransactionName = "Wpłata pierwsza", TransactionType = eTransactionType.Deposit, Amount = 200 }
@@ -26,34 +26,28 @@ namespace SalaryModuleProject.Controllers
         // GET: Transaction/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var data = defaultList.Where(x => x.TransactionId == id).FirstOrDefault();
+            return View(data);
         }
 
         // GET: Transaction/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new TransactionModel());
         }
 
         // POST: Transaction/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(TransactionModel transactionModel)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            defaultList.Add(transactionModel);
+            return RedirectToAction("Index");
         }
 
         // GET: Transaction/Edit/5
         public ActionResult Edit(int id)
         {
+            var data = defaultList.Where(x => x.TransactionId == id).FirstOrDefault();
             return View();
         }
 
