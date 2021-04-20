@@ -13,8 +13,6 @@ namespace SalaryModuleProject.Controllers
     {
         private readonly ITransactionRepository _transactionRepository;
 
-        //public TransactionController() { }
-
         public TransactionController(ITransactionRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
