@@ -4,29 +4,33 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SalaryModuleProject.Models;
+using SalaryModuleProject.Repositories;
 using static SalaryModuleProject.Enums.TransactionEnums;
 
 namespace SalaryModuleProject.Controllers
 {
     public class TransactionController : Controller
     {
-        public List<TransactionModel> defaultList = new List<TransactionModel>()
+        private readonly ITransactionRepository _transactionRepository;
+
+        //public TransactionController() { }
+
+        public TransactionController(ITransactionRepository transactionRepository)
         {
-            new TransactionModel() { TransactionId = 1, TransactionName = "Zakupy", TransactionType = eTransactionType.Withdraw, Amount = 150 },
-            new TransactionModel() { TransactionId = 2, TransactionName = "Wpłata pierwsza", TransactionType = eTransactionType.Deposit, Amount = 200 }
-        };
+            _transactionRepository = transactionRepository;
+        }
 
         // GET: Transaction
         public ActionResult Index()
         {
-            var data = defaultList;
-            return View(defaultList);
+            var data = _transactionRepository.GetAll();
+            return View(data);
         }
 
         // GET: Transaction/Details/5
         public ActionResult Details(int id)
         {
-            var data = defaultList.Where(x => x.TransactionId == id).FirstOrDefault();
+            var data = _transactionRepository.Get(id);
             return View(data);
         }
 
@@ -40,53 +44,38 @@ namespace SalaryModuleProject.Controllers
         [HttpPost]
         public ActionResult Create(TransactionModel transactionModel)
         {
-            defaultList.Add(transactionModel);
+            _transactionRepository.Add(transactionModel);
             return RedirectToAction("Index");
         }
 
         // GET: Transaction/Edit/5
         public ActionResult Edit(int id)
         {
-            var data = defaultList.Where(x => x.TransactionId == id).FirstOrDefault();
+            var data = _transactionRepository.Get(id);
             return View();
         }
 
         // POST: Transaction/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, TransactionModel transactionModel)
         {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _transactionRepository.Update(id, transactionModel);
+            return RedirectToAction("Index");
         }
 
         // GET: Transaction/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var data = _transactionRepository.Get(id);
+            return View(data);
         }
 
         // POST: Transaction/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, TransactionModel transactionModel)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _transactionRepository.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }
