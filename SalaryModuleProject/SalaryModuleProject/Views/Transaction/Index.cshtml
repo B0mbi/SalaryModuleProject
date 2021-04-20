@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SalaryModuleProject.Models.TransactionModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Nowa transakcja", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Nazwa
+        </th>
+        <th>
+            Kwota
+        </th>
+        <th>
+            Typ
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransactionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @if (item.TransactionType == SalaryModuleProject.Enums.TransactionEnums.eTransactionType.Deposit)
+            {
+                <p>Wypłata</p>
+            }
+            else
+            {
+                <p>Wpłata</p>
+            }
+        </td>
+        <td>
+            @Html.ActionLink("Edytuj", "Edit", new { id = item.TransactionId }) |
+            @Html.ActionLink("Szczegóły", "Details", new { id = item.TransactionId }) |
+            @Html.ActionLink("Usuń", "Delete", new { id = item.TransactionId })
+        </td>
+    </tr>
+}
+
+</table>
